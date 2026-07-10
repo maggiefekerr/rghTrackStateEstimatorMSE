@@ -47,6 +47,10 @@ def parse_args():
                         help="Skip training and only run inference using a saved model")
     parser.add_argument("--enable_progress_bar", action="store_true",
                         help="Enable progress bar during training (default: disabled)")
+    parser.add_argument("--model_file", type=str, default=None,
+                        help="Path to TorchScript model (.pt). If omitted, use the default model.")
+    parser.add_argument("--norm_file", type=str, default=None,
+                        help="Path to normalization statistics (norm_stats.json). If omitted, use the default normalization.")
     return parser.parse_args()
 
 
@@ -162,9 +166,13 @@ def main():
     NETS_DIR = BASE_DIR / "nets"
 
     if args.no_train:
-        print("\n=== Inference mode: loading normalization stats from nets/ ===")
+        stats_path = (
+            Path(args.norm_file).expanduser().resolve()
+            if args.norm_file is not None
+            else NETS_DIR / "norm_stats.json"
+        )
 
-        stats_path = NETS_DIR / "norm_stats.json"
+        print(f"Loading normalization stats from: {stats_path}")
 
         if not stats_path.exists():
             raise FileNotFoundError(f"Normalization stats not found: {stats_path}")
@@ -320,11 +328,14 @@ def main():
     # Load model
     BASE_DIR = Path(__file__).resolve().parent
 
-    model_file = (
-        Path(outDir) / f"track_state_mlp_{end_name}.pt"
-        if doTraining
-        else BASE_DIR / "nets" / "track_state_mlp_default.pt"
-    )
+    if doTraining:
+        model_file = Path(outDir) / f"track_state_mlp_{end_name}.pt"
+    else:
+        model_file = (
+            Path(args.model_file).expanduser().resolve()
+            if args.model_file is not None
+            else BASE_DIR / "nets" / "track_state_mlp_default.pt"
+        )
 
     model_file = model_file.resolve()
     print("Loading model from:", model_file)
