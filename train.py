@@ -441,6 +441,18 @@ def main():
                 f"target={all_targets_denorm[i, j]:12.6f}"
             )
 
+    # Print predictions + truth for each event
+    truth_pred_csv = outDir+"truth_vs_pred_"+end_name+".csv"
+    with open(truth_pred_csv, "w") as f:
+        f.write("#p_truth(GeV),theta_truth(deg),phi_truth(deg),p_pred(GeV),theta_pred(deg),phi_pred(deg)"+'\n')
+        for i in range(val_size):
+            f.write(f"{all_targets_denorm[i,0]:.6f}"+","+f"{all_targets_denorm[i,1]:.6f}"+","+f"{all_targets_denorm[i,2]:.6f}"+","+
+                    f"{all_preds_denorm[i,0]:.6f}"+","+f"{all_preds_denorm[i,1]:.6f}"+","+f"{all_preds_denorm[i,2]:.6f}"+'\n')
+        #endfor
+    #endwith
+    f.close()
+    print("\nEvent level comparison between truth and prediction saved.")
+
 
 if __name__ == "__main__":
 
