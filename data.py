@@ -6,7 +6,7 @@ def read_track_state_data(filename):
     Each line:
 
     x1, y1, z1, x2, y2, z2, x3, y3, z3, tof,
-    p, theta, phi
+    p, theta, phi, particleType
 
     Returns
     -------
@@ -15,8 +15,8 @@ def read_track_state_data(filename):
         (x1, y1, z1, x2, y2, z2, x3, y3, z3, tof)
 
     targets : np.ndarray
-        shape [N, 3]
-        (p, theta, phi)
+        shape [N, 4]
+        (p, theta, phi, particleType)
     """
 
     features = []
@@ -32,21 +32,21 @@ def read_track_state_data(filename):
     for i, line in enumerate(lines):
         vals = [float(x) for x in line.split(",")]
 
-        if len(vals) != 13:
+        if len(vals) != 14:
             raise ValueError(
-                f"Line {i+1}: expected 13 values "
-                f"(10 input + particleType + 3 output), "
+                f"Line {i+1}: expected 14 values "
+                f"(10 input + particleType + 4 output), "
                 f"got {len(vals)}"
             )
 
         (
             x1, y1, z1, x2, y2, z2, x3, y3, z3, tof,
-            p, theta, phi
+            p, theta, phi, particleType
         ) = vals
 
-        features.append([x1, y1, z1, x2, y2, z2, x3, y3, z3, tof,])
+        features.append([x1, y1, z1, x2, y2, z2, x3, y3, z3, tof])
 
-        targets.append([p, theta, phi])
+        targets.append([p, theta, phi, particleType])
 
     features = np.array(features, dtype=np.float32)
     targets = np.array(targets, dtype=np.float32)

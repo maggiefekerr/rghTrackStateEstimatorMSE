@@ -9,7 +9,7 @@ class TrackStateMLP(pl.LightningModule):
     def __init__(
         self,
         input_dim=10,
-        state_dim=3,
+        state_dim=4,
         hidden_dim=64,
         num_layers=3,
         lr=1e-3,

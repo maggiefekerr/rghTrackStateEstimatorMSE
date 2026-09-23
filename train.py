@@ -406,7 +406,7 @@ def main():
     print("\nTarget statistics")
 
     for i, name in enumerate(
-            ["p", "theta", "phi"]
+            ["p", "theta", "phi", "particleType"]
     ):
         print(
             f"{name:4s}: "
@@ -417,7 +417,7 @@ def main():
     print("\nPrediction statistics")
 
     for i, name in enumerate(
-            ["p", "theta", "phi"]
+            ["p", "theta", "phi", "particleType"]
     ):
         print(
             f"{name:4s}: "
@@ -428,7 +428,7 @@ def main():
     # Print sample predictions
     print("\nSample predictions:")
 
-    names = ["p", "theta", "phi"]
+    names = ["p", "theta", "phi", "particleType"]
 
     for i in range(min(target_dim, all_preds_denorm.size(0))):
 
@@ -444,10 +444,10 @@ def main():
     # Print predictions + truth for each event
     truth_pred_csv = outDir+"truth_vs_pred_"+end_name+".csv"
     with open(truth_pred_csv, "w") as f:
-        f.write("#p_truth(GeV),theta_truth(deg),phi_truth(deg),p_pred(GeV),theta_pred(deg),phi_pred(deg)"+'\n')
+        f.write("#p_truth(GeV),theta_truth(deg),phi_truth(deg),particleType_truth,p_pred(GeV),theta_pred(deg),phi_pred(deg),particleType_pred"+'\n')
         for i in range(val_size):
-            f.write(f"{all_targets_denorm[i,0]:.6f}"+","+f"{all_targets_denorm[i,1]:.6f}"+","+f"{all_targets_denorm[i,2]:.6f}"+","+
-                    f"{all_preds_denorm[i,0]:.6f}"+","+f"{all_preds_denorm[i,1]:.6f}"+","+f"{all_preds_denorm[i,2]:.6f}"+'\n')
+            f.write(f"{all_targets_denorm[i,0]:.6f}"+","+f"{all_targets_denorm[i,1]:.6f}"+","+f"{all_targets_denorm[i,2]:.6f}"+","+f"{all_targets_denorm[i,3]:.6f}"+","+
+                    f"{all_preds_denorm[i,0]:.6f}"+","+f"{all_preds_denorm[i,1]:.6f}"+","+f"{all_preds_denorm[i,2]:.6f}"+","+f"{all_preds_denorm[i,3]:.6f}"+'\n')
         #endfor
     #endwith
     f.close()

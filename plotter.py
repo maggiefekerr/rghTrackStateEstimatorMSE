@@ -16,7 +16,7 @@ class Plotter:
     def __init__(self, print_dir="", end_name=""):
         self.print_dir = print_dir
         self.end_name = end_name
-        self.state_parameter_name = ["p", "theta", "phi"]
+        self.state_parameter_name = ["p", "theta", "phi", "particleType"]
         os.makedirs(self.print_dir, exist_ok=True)
 
     # ------------------------------------------------------------
@@ -50,7 +50,7 @@ class Plotter:
     # ------------------------------------------------------------
     # residual
     # ------------------------------------------------------------
-    def plot_residuals(self, preds, targets, fit_range_factor={"p": 0.8, "theta": 0.8, "phi": 0.4}):
+    def plot_residuals(self, preds, targets, fit_range_factor={"p": 0.8, "theta": 0.8, "phi": 0.4, "particleType": 0.8}):
 
         preds = preds.detach().cpu().numpy()
         targets = targets.detach().cpu().numpy()
@@ -59,6 +59,7 @@ class Plotter:
             'p': (-0.25, 0.25),
             'theta': (-5, 5),
             'phi': (-20, 20),
+            'particleType': (-100, 100)
         }
 
         # --------------------------------------------------------
@@ -68,16 +69,18 @@ class Plotter:
             fit_range_factors = {
                 "p": fit_range_factor,
                 "theta": fit_range_factor,
-                "phi": fit_range_factor
+                "phi": fit_range_factor,
+                "particleType": fit_range_factor
             }
         else:
             fit_range_factors = {
                 "p": fit_range_factor.get("p", 2.0),
                 "theta": fit_range_factor.get("theta", 2.0),
-                "phi": fit_range_factor.get("phi", 2.0)
+                "phi": fit_range_factor.get("phi", 2.0),
+                "particleType": fit_range_factor.get("particleType", 2.0)
             }
 
-        fig, axes = plt.subplots(1, 3, figsize=(12, 6))
+        fig, axes = plt.subplots(1, 4, figsize=(16, 6))
         axes = axes.flatten()
 
         fit_results = []
@@ -199,10 +202,10 @@ class Plotter:
         Parameters
         ----------
         preds : torch.Tensor
-            shape (N,3)
+            shape (N,4)
 
         targets : torch.Tensor
-            shape (N,3)
+            shape (N,4)
 
         bins : int
         """
@@ -212,8 +215,8 @@ class Plotter:
 
         plt.figure(figsize=(12, 4))
 
-        for dim in range(3):
-            plt.subplot(1, 3, dim + 1)
+        for dim in range(4):
+            plt.subplot(1, 4, dim + 1)
 
             xmin = min(targets[:, dim].min(), preds[:, dim].min())
             xmax = max(targets[:, dim].max(), preds[:, dim].max())
